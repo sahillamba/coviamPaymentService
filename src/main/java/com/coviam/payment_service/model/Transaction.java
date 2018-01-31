@@ -37,15 +37,15 @@ public class Transaction  extends Auditable<String> {
     @NotNull
     private String paymentMethod;
 
-    public static enum Status {active, inactive, deferred, cancelled};
+    public static enum Status {success, pending, deferred, cancelled};
 
     @Column(name = "paymentStatus")
     @Enumerated(EnumType.STRING)
-    private Transaction.Status paymentStatus = Transaction.Status.active;
+    private Transaction.Status paymentStatus = Transaction.Status.pending;
 
-    @Column(name="customer_id")
+    @Column(name="customerId")
     @NotNull
-    private String customer_id;
+    private String customerId;
 
     @ManyToOne
     @JoinColumn(name = "cardDetails_id")
@@ -108,12 +108,12 @@ public class Transaction  extends Auditable<String> {
         this.paymentStatus = paymentStatus;
     }
 
-    public String getCustomer_id() {
-        return customer_id;
+    public String getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomer_id(String customer_id) {
-        this.customer_id = customer_id;
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 
     public CardDetails getCardDetails() {
@@ -124,17 +124,13 @@ public class Transaction  extends Auditable<String> {
         this.cardDetails = cardDetails;
     }
 
-    public Transaction(){
-
-    }
-
-    public Transaction(String txnId, String itnId, String amount, String providerId, String paymentMethod, Status paymentStatus, String customer_id) {
+    public Transaction(String txnId, String itnId, String amount, String providerId, String paymentMethod, Status paymentStatus, String customerId) {
         this.txnId = txnId;
         this.itnId = itnId;
         this.amount = amount;
         this.providerId = providerId;
         this.paymentMethod = paymentMethod;
         this.paymentStatus = paymentStatus;
-        this.customer_id = customer_id;
+        this.customerId = customerId;
     }
 }

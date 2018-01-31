@@ -1,10 +1,10 @@
 package com.coviam.payment_service.repository;
 
-import com.coviam.payment_service.model.ProviderConfig;
+import com.coviam.payment_service.model.CardDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CardDetailsRepository extends JpaRepository<ProviderConfig,Long> {
+public interface CardDetailsRepository extends JpaRepository<CardDetails,Long> {
 
 }

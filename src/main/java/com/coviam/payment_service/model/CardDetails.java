@@ -30,6 +30,11 @@ public class CardDetails extends Auditable<String> {
     @NotNull
     private String expDate;
 
+
+    @Column(name = "cvv")
+    @NotNull
+    private String cvv;
+
     @OneToMany(
             mappedBy = "cardDetails",
             cascade = CascadeType.ALL,
@@ -78,13 +83,22 @@ public class CardDetails extends Auditable<String> {
         this.transactions = transactions;
     }
 
+    public String getCvv() {
+        return cvv;
+    }
+
+    public void setCvv(String cvv) {
+        this.cvv = cvv;
+    }
+
     public CardDetails(){
 
     }
 
-    public CardDetails(String cardNumber, String nameOnCard, String expDate) {
+    public CardDetails(String cardNumber, String nameOnCard, String expDate, String cvv) {
         this.cardNumber = cardNumber;
         this.nameOnCard = nameOnCard;
         this.expDate = expDate;
+        this.cvv = cvv;
     }
 }
