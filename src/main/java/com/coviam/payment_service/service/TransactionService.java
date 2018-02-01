@@ -5,6 +5,7 @@ import com.coviam.payment_service.model.ProviderConfig;
 import com.coviam.payment_service.model.Transaction;
 import com.coviam.payment_service.repository.CardDetailsRepository;
 import com.coviam.payment_service.repository.TransactionRepository;
+import com.coviam.payment_service.request.ProcessPaymentRequest;
 import com.coviam.payment_service.request.UpdateBookingPaymentRequest;
 import com.coviam.payment_service.response.PaymentResponse;
 import com.coviam.payment_service.response.ProcessPaymentResponse;
@@ -39,12 +40,12 @@ public class TransactionService {
     @Autowired
     JsonHelper jsonHelper;
 
-    public ProcessPaymentResponse processPayment(String itnId, String amount, String providerId, String paymentMethod, String customerId, CardDetails cardDetails, Boolean overRideFlag){
+    public ProcessPaymentResponse processPayment(ProcessPaymentRequest request){
 
         ProcessPaymentResponse processPaymentResponse;
 
-        ProviderConfig providerConfig = providerService.getProviderConfig(Long.valueOf(providerId));
-        PaymentResponse paymentResponse = cardPaymentService.pay(cardDetails,overRideFlag,providerConfig);
+        ProviderConfig providerConfig = providerService.getProviderConfig(Long.valueOf(request.getProviderId()));
+        PaymentResponse paymentResponse = cardPaymentService.pay(request.getCardDetails(),request.getOverRideFlag(),providerConfig);
 
         Transaction.Status paymentStatus;
         final String uri;
@@ -56,8 +57,8 @@ public class TransactionService {
             uri = "http://localhost:8091/booking/updateBookingPaymentError";
         }
 
-        Transaction newTransaction = new Transaction(randomGenerator.generateRandomString(),itnId,amount,providerId,paymentMethod, paymentStatus,customerId);
-        newTransaction.setCardDetails(cardDetails);
+        Transaction newTransaction = new Transaction(randomGenerator.generateRandomString(),request.getItnId(),request.getAmount(),request.getProviderId(),request.getPaymentMethod(), paymentStatus,request.getCustomerId());
+        newTransaction.setCardDetails(request.getCardDetails());
         Transaction savedTransaction = transactionRepository.save(newTransaction);
 
         UpdateBookingPaymentRequest requestObj = new UpdateBookingPaymentRequest(savedTransaction.getItnId(),savedTransaction.getTxnId());
